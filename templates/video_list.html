@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Video List{% endblock %}
+
+{% block content %}
+    <br/>
+    <br/>
+  
+    <br/>
+    <style>
+        /* base.html or a separate CSS file */
+.card {
+    height: 450px; /* Set a fixed height for the cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.embed-responsive-16by9 {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.embed-responsive-16by9 .embed-responsive-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+    </style>
+    <div class="row">
+        {% for video in videos %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ video.title }}</h5>
+                        <p class="card-text">{{ video.description }}</p>
+                        <div class="embed-responsive embed-responsive-16by9 mb-2">
+                            {% if video.is_url %}
+                                {% if 'youtube.com' in video.video_url or 'youtu.be' in video.video_url %}
+                                    {% if 'youtube.com/watch?v=' in video.video_url %}
+                                        {% with video_id=video.video_url|slice:'32:' %}
+                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
+                                        {% endwith %}
+                                    {% elif 'youtu.be' in video.video_url %}
+                                        {% with video_id=video.video_url|slice:'17:' %}
+                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
+                                        {% endwith %}
+                                    {% endif %}
+                                {% else %}
+                                    <iframe class="embed-responsive-item" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
+                                {% endif %}
+                            {% else %}
+                                <video class="embed-responsive-item" controls>
+                                    <source src="{{ video.video_file.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% endif %}
+                        </div>
+                        <p class="mt-2">Uploaded by: {{ video.uploaded_by.username }}</p>
+                        <p>Uploaded at: {{ video.uploaded_at }}</p>
+                        {% if user == video.uploaded_by %}
+                        <div class="d-flex justify-content-between">
+                              <a href="{% url 'edit_video' video.id %}">Edit</a>
+                              <a href="{% url 'delete_video' video.id %}">Delete</a>
+                        </div>
+                       {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
