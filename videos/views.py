@@ -16,9 +16,7 @@ def upload_video(request):
         if form.is_valid():
             video = form.save(commit=False)
             video.uploaded_by = request.user  # Assuming user is logged in
-            if  not video.video_url:
-                form.add_error(None, 'Either upload a file or provide a URL')
-                return render(request, 'upload_video.html', {'form': form})
+             
             video.save()
             return redirect('video_list')  # Redirect to video listing page
     else:

@@ -43,26 +43,12 @@
                         <h5 class="card-title">{{ video.title }}</h5>
                         <p class="card-text">{{ video.description }}</p>
                         <div class="embed-responsive embed-responsive-16by9 mb-2">
-                            {% if video.is_url %}
-                                {% if 'youtube.com' in video.video_url or 'youtu.be' in video.video_url %}
-                                    {% if 'youtube.com/watch?v=' in video.video_url %}
-                                        {% with video_id=video.video_url|slice:'32:' %}
-                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
-                                        {% endwith %}
-                                    {% elif 'youtu.be' in video.video_url %}
-                                        {% with video_id=video.video_url|slice:'17:' %}
-                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
-                                        {% endwith %}
-                                    {% endif %}
-                                {% else %}
-                                    <iframe class="embed-responsive-item" src="{{ video.video_url }}" frameborder="0" allowfullscreen></iframe>
-                                {% endif %}
-                            {% else %}
+                          
                                 <video class="embed-responsive-item" controls>
                                     <source src="{{ video.video_file.url }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
-                            {% endif %}
+                        
                         </div>
                         <p class="mt-2">Uploaded by: {{ video.uploaded_by.username }}</p>
                         <p>Uploaded at: {{ video.uploaded_at }}</p>
